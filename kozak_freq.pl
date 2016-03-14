@@ -1,3 +1,23 @@
+##################################################################################
+# Kozak_freq.pl v0.1  																													 #
+# David R. Saeva, last upd. 09/2015																							 #
+# 																																							 #
+# Examines the seqs within .fasta file provided via <STDIN>. At each start codon #
+# located within a sequence, the bases at each position from -6 to +3 are        #
+# examined and recorded. A net tally is recorded for each position, both printed #
+# to the command line as well as recorded to a MySQL database.									 #
+#																																								 #
+# Please note - when initially designed, I did not consider the impact of the 	 #
+# ubiquity of start codons in the assessed sequences or the redundancy of 			 #
+# sequences within database I was mining. Additionally, this script assumes that #
+# you have locally-hosted MySQL database to which you are uploading results. 		 #
+# Please take note of these issues before using this code for your own research, #
+# and alter the code as needed.																									 #
+##################################################################################
+
+
+
+
 #!/perl64/bin/perl -w
 use strict;
 use DBI;
@@ -16,21 +36,21 @@ my $dbh = DBI->connect(
 my ($as, $ts, $gs, $cs, $i, $j);
 my ($seq, @lines, @tid, @ac, $tac,
 	@kozak_seqs, $tsq, $count);
-	
-my (@kozak_nuc_str, @k1, @k2, 
-	@k3, @k4, @k5, @k6, @k7, 
+
+my (@kozak_nuc_str, @k1, @k2,
+	@k3, @k4, @k5, @k6, @k7,
 	@k8, @k9, @k10, @k11, @k12);
-	
-my ($kbref1, $kbref2, $kbref3, $kbref4, 
-	$kbref5, $kbref6, $kbref7, $kbref8, 
+
+my ($kbref1, $kbref2, $kbref3, $kbref4,
+	$kbref5, $kbref6, $kbref7, $kbref8,
 	$kbref9, $kbref10, $kbref11, $kbref12
 ) = (
-	\@k1, \@k2, \@k3, \@k4, \@k5, \@k6, 
+	\@k1, \@k2, \@k3, \@k4, \@k5, \@k6,
 	\@k7, \@k8, \@k9, \@k10, \@k11, \@k12);
-	
-my @kozak_nucs = ( 
-	$kbref1, $kbref2, $kbref3, $kbref4, 
-	$kbref5, $kbref6, $kbref7, $kbref8, 
+
+my @kozak_nucs = (
+	$kbref1, $kbref2, $kbref3, $kbref4,
+	$kbref5, $kbref6, $kbref7, $kbref8,
 	$kbref9, $kbref10, $kbref11, $kbref12);
 
 my @pos = ("-6", "-5", "-4", "-3", "-2", "-1", "+1", "+2", "+3", "+4", "+5", "+6");
@@ -74,7 +94,7 @@ while ( scalar( @FASTAin != 0) ) {
 #				push @kozak_seqs, $1;
 #			};
 			my @s = split(//, $1);
-			
+
 # push nucleotides into AoA based on sequence order
 			while (scalar(@s != 0)) {
 				for $j (0 .. 11) {
@@ -82,11 +102,11 @@ while ( scalar( @FASTAin != 0) ) {
 					push @{$kozak_nucs[$j]}, $tsq;
 				};
 			};
-			
+
 # convert copied atg into 123
 			$seq =~ s/atg/123/;
 			$count = $seq =~ s/atg/atg/g;
-			
+
 		};
 		@lines = ();
 		@tid = split( / /, $_);
@@ -95,7 +115,7 @@ while ( scalar( @FASTAin != 0) ) {
 # process seq lines
 	if ( $_ !~ /[=>]/ ) {
 		push @lines, $_;
-	};	
+	};
 };
 
 # process last seq
@@ -111,7 +131,7 @@ while ($count >= 1) {
 #				push @kozak_seqs, $1;
 #	};
 	my @s = split(//, $1);
-			
+
 # push nucleotides into AoA based on sequence order
 	while (scalar(@s != 0)) {
 		for $j (0 .. 11) {
@@ -119,10 +139,10 @@ while ($count >= 1) {
 			push @{$kozak_nucs[$j]}, $tsq;
 		};
 	};
-			
+
 # convert copied atg into 123
 	$seq =~ s/atg/123/;
-	$count = $seq =~ s/atg/atg/g;		
+	$count = $seq =~ s/atg/atg/g;
 };
 
 # concatentate sequence position nucleotide arrays into scalars
@@ -165,7 +185,7 @@ print "@kozak_nuc_str\n";
 # MySQL - prep the INSERT statement once
 my $sth_insert = $dbh->prepare( 'INSERT INTO utr_koznucfreq SET seq_pos=?, nuc_insts=?' )
 	or die $dbh->errstr;
-		
+
 # create the array iterator
 my $ea = each_array(@pos, @kozak_nuc_str);
 
@@ -173,5 +193,3 @@ my $ea = each_array(@pos, @kozak_nuc_str);
 while ( my ( $val_pos, $val_kozak_nuc_str ) = $ea ->() ) {
 	$sth_insert->execute( $val_pos, $val_kozak_nuc_str ) or die $dbh->errstr;
 };
-
-
