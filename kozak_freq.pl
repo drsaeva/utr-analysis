@@ -6,12 +6,12 @@
 # located within a sequence, the bases at each position from -6 to +3 are        #
 # examined and recorded. A net tally is recorded for each position, both printed #
 # to the command line as well as recorded to a MySQL database.			 #
-#									 	 #
-# ubiquity of start codons in the assessed sequences or the redundancy of 	 #
-# sequences within database I was mining. Additionally, this script assumes that #
-# you have locally-hosted MySQL database to which you are uploading results. 	 #
-# Please take note of these issues before using this code for your own research, #
-# and alter the code as needed.							 #
+#									         #
+# This script does not consider the ubiquity of start codons in the assessed 	 #
+# sequences or the redundancy of sequences within database I was mining.	 #
+# Additionally, this script assumes that you have locally-hosted MySQL database  #
+# to which you are uploading results. 	Please take note of these issues before  #
+# using this code for your own research, and alter the code as needed.		 #
 ##################################################################################
 
 
