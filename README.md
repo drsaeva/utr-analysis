@@ -5,4 +5,6 @@ Later, some scripts were written to parse tumor overexpression data from Oncomin
 
 Scripts present in this repository are provided as-is. This code was some of the first I'd written, and would likely be refactored considerably if I were to re-use it. 
 
-Not all scripts are currently present here - please reach out if you would like to see more examples uploaded.
+~~Not all scripts are currently present here - please reach out if you would like to see more examples uploaded.~~
+
+Update: All original scripts, aside from kozak_freq.pl (which is in this main directory, have been uploaded to the legacy directory. As described above these are provided as-is.
